@@ -1,0 +1,1 @@
+The bug is in the line 7. It takes place because the code is not considering the possibility of a division by 0 if t1 = 0., and thus giving rise to a ZeroDivisionError
