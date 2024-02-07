@@ -13,4 +13,9 @@ def seq_len(filename):
     body = body.replace("\n", "")
     return len(body)
 
-def seq_count_base(seq, base)
+def seq_count_base(filename, base):
+    first_line = Path(filename).read_text().find("\n")
+    body = Path(filename).read_text()[first_line:]
+    body = body.replace("\n", "")
+    base = len(body)
+    return base
