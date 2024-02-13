@@ -1,4 +1,4 @@
-from Seq0 import *
+from SO6.Seq0 import *
 FOLDER = "../Sequences/"
 FILENAME = "U5.txt"
 
