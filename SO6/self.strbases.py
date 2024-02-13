@@ -11,3 +11,4 @@ class Seq:
 # Create objects of the class Seq
 s1 = Seq("AGTACACTGGT")
 s2 = Seq("CGTAAC")
+pass
