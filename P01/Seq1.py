@@ -92,9 +92,15 @@ class Seq:
                     complement += "C"
         return complement
 
-def read_fasta(self, filename):
-    file_contents = Path(filename).read_text()
-    first_line = file_contents.find("\n")
-    new_sequence = file_contents[first_line:]
-    self.strbases = new_sequence.replace("\n", "")
-    return self.strbases
+    def read_fasta(self, filename):
+        file_contents = Path(filename).read_text()
+        first_line = file_contents.find("\n")
+        new_sequence = file_contents[first_line:]
+        self.strbases = new_sequence.replace("\n", "")
+        return self.strbases
+
+    def most_frequent_base(self):
+        sequence = self.strbases
+        base_counts = {base: sequence.count(base) for base in sequence}
+        most_frequent_base = max(base_counts, key=base_counts.get)
+        return most_frequent_base
