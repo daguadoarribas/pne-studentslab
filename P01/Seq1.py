@@ -3,6 +3,8 @@
 #Clase: maquina > objeto:ordenador
 #Característica: las funciones que yo tengo que llamar
 #Las funciones de siempre son las caracteristicas y hay que llamarlas, las otras se asignan automaticamente al objeto
+from pathlib import Path
+
 class Seq:
     """A class for representing sequences"""
     def __init__(self, strbases=None):
@@ -70,3 +72,29 @@ class Seq:
             sequence = self.strbases
             reverse = sequence[::-1]
         return reverse
+
+    def seq_complement(self):
+        if self.strbases == "ERROR":
+            complement = "ERROR"
+        elif self.strbases == "NULL":
+            complement = "NULL"
+        else:
+            seq = self.strbases
+            complement = ""
+            for i in seq:
+                if i == "A":
+                    complement += "T"
+                elif i == "T":
+                    complement += "A"
+                elif i == "C":
+                    complement += "G"
+                elif i == "G":
+                    complement += "C"
+        return complement
+
+def read_fasta(self, filename):
+    file_contents = Path(filename).read_text()
+    first_line = file_contents.find("\n")
+    new_sequence = file_contents[first_line:]
+    self.strbases = new_sequence.replace("\n", "")
+    return self.strbases
