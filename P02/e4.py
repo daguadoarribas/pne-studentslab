@@ -3,13 +3,13 @@ from P01.Seq1 import Seq
 PRACTICE = 2
 EXERCISE = 4
 
-SEQUENCES = "../Sequences/"
+SEQUENCES_DIR = "../Sequences/"
 GENES = ["U5.txt", "ADA.txt", "FRAT1.txt"]
 
 IP = "212.128.255.64" # your IP server address
 PORT = 8081
 def get_file_path(gene):
-    return SEQUENCES + gene
+    return SEQUENCES_DIR + gene
 
 def req_response_from_server(client, msg):
     print("To server: {}".format(msg), sep="")
