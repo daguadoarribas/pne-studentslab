@@ -6,7 +6,7 @@ EXERCISE = 4
 SEQUENCES_DIR = "../Sequences/"
 GENES = ["U5.txt", "ADA.txt", "FRAT1.txt"]
 
-IP = "212.128.255.64" # your IP server address
+IP = "212.128.255.99" # your IP server address
 PORT = 8081
 def get_file_path(gene):
     return SEQUENCES_DIR + gene
