@@ -5,12 +5,12 @@ EXERCISE = 6
 print(f"-----| Practice {PRACTICE}, Exercise {EXERCISE} |------")
 
 IP = "212.128.255.97" # your IP server address
-PORT = 8080
+PORT = 8081
 c1 = Client(IP, PORT)
 print(c1)
 
 IP = "212.128.255.97" # your IP server address
-PORT = 8081
+PORT = 8080
 c2 = Client(IP, PORT)
 print(c2)
 s = Seq()
@@ -26,7 +26,7 @@ print(f"Gene FRAT1: {msg2}")
 
 for i in range(1, 11):
     index = (i-1) * 10
-    fragment = msg2[index, index + 10]
+    fragment = msg2[index : index + 10]
     print(f"Fragment {i}: {fragment}")
     if i % 2 == 0:
         message = c2.talk(f"Fragment {i}: {fragment}")
