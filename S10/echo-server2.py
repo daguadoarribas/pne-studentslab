@@ -1,4 +1,5 @@
 import socket
+import termcolor
 
 PORT = 8080
 IP = "212.128.255.103" # this IP address is local, so only requests from the same machine are possible
@@ -21,7 +22,7 @@ while True: ##To keep listening to different clients
     print("CONNECTION", str(count), "Client ID, PORT: " + str(address))      ## if I write this in the terminal u get the client printed: echo "Hi!" | nc 212.128.255.103 8081
 
     msg = rs.recv(2048).decode("utf-8")  ##this message is in bytes and we need to convert them to code as a string
-    print("The client says..." + msg)
+    print(f"The client says..." + termcolor.colored(msg,"green"))
 
     new_msg = "ECHO: " + msg        #We create a string that we are going to send to the server
     rs.send(new_msg.encode())
