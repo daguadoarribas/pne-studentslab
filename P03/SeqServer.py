@@ -47,27 +47,28 @@ class SeqServer():
             print("Server stopped by the user")
             serversocket.close()
 
-    sequence = ["ACGGTACGATAC", "CATGGGATCAATG", "ACATTAGCGTTGA", "TGGATCCATGCA", "AGTGATTGCTGAT"]
+
     def return_response(self, msg):     #esto es para que para cada msg del cliente el servidor de una respuesta concreta
         if msg.startswith("PING"):
-            print("PING")
-            return self.ping_response()
+            print("PING")               #los prints aperecen en mi pantallita normal
+            return self.ping_response()     #los returns aparecen en la terminal
         elif msg.startswith("GET"):
-
-
+            print("GET\n", self.get_response(msg))
+            return self.get_response()
 
     def ping_response(self):        ###aqui no pongo msg ##porque ping ##responde ##SIEMPRE Ok!
         print("PING command!")  # Print message in green
         return "OK!\n"  # Response message
 
-    def get_response(self, msg, sequence):
+    def get_response(self, msg):
+        sequence = ["ACGGTACGATAC", "CATGGGATCAATG", "ACATTAGCGTTGA", "TGGATCCATGCA", "AGTGATTGCTGAT"]
         number = 0
-        for i in msg:
+        for i in msg:           #esto itera por las letras hasta que encuentra un numero eg GET 2 --> 2
             if i.isdigit():
-                number = i
+                number = i          #esto hace que ese numero (2) ahora sea i
             else:
                 pass
-        return sequence[int(number)]
+        return sequence[int(number)]        ##returneo el elemento de la lista con el indice i = number
 
 
 
