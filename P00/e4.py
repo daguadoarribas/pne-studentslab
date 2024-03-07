@@ -1,4 +1,4 @@
-from SO6.Seq0 import seq_read_fasta
+from S06.Seq0 import seq_read_fasta
 FOLDER = "../Sequences/"
 FILENAME = "U5.txt"
 sequence = seq_read_fasta(FOLDER + FILENAME)

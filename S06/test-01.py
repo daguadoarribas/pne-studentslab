@@ -1,4 +1,4 @@
-from SO6.Seq0 import *
+from S06.Seq0 import *
 
 seq1 = "ATTCCCGGGG"
 

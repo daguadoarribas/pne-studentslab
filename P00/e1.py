@@ -1,2 +1,3 @@
-from SO6.Seq0 import *
-seq_ping()
+from Seq0 import *
+
+exercise1 = seq_ping()
