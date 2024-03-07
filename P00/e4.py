@@ -1,77 +1,11 @@
-from S06.Seq0 import seq_read_fasta
-FOLDER = "../Sequences/"
-FILENAME = "U5.txt"
-sequence = seq_read_fasta(FOLDER + FILENAME)
+from S06.Seq0 import *
 
-countA = 0
-countC = 0
-countT = 0
-countG = 0
+genes = ["U5", "ADA", "FRAT1", "FXN"]
+bases = ["A", "C", "G", "T"]
+print("------| Exercise 4 |------")
+for gene in genes:
+    seq = seq_read_fasta(f"{gene}.txt")
+    print(f"Gene: {gene}")
 
-for i in sequence:
-    if i == "A":
-        countA += 1
-    elif i == "C":
-        countC += 1
-    elif i == "T":
-        countT += 1
-    elif i == "G":
-        countG += 1
-print("Gene U5: ", "A ->", countA, "C ->", countC, "T ->", countT, "G ->", countG)
-
-FILENAME = "ADA.txt"
-sequence = seq_read_fasta(FOLDER + FILENAME)
-
-countA = 0
-countC = 0
-countT = 0
-countG = 0
-
-for i in sequence:
-    if i == "A":
-        countA += 1
-    elif i == "C":
-        countC += 1
-    elif i == "T":
-        countT += 1
-    elif i == "G":
-        countG += 1
-print("Gene ADA: ", "A ->", countA, "C ->", countC, "T ->", countT, "G ->", countG)
-
-FILENAME = "FRAT1.txt"
-sequence = seq_read_fasta(FOLDER + FILENAME)
-
-countA = 0
-countC = 0
-countT = 0
-countG = 0
-
-for i in sequence:
-    if i == "A":
-        countA += 1
-    elif i == "C":
-        countC += 1
-    elif i == "T":
-        countT += 1
-    elif i == "G":
-        countG += 1
-print("Gene FRAT1: ", "A ->", countA, "C ->", countC, "T ->", countT, "G ->", countG)
-
-FILENAME = "FXN.txt"
-sequence = seq_read_fasta(FOLDER + FILENAME)
-
-countA = 0
-countC = 0
-countT = 0
-countG = 0
-
-for i in sequence:
-    if i == "A":
-        countA += 1
-    elif i == "C":
-        countC += 1
-    elif i == "T":
-        countT += 1
-    elif i == "G":
-        countG += 1
-print("Gene FXN: ", "A ->", countA, "C ->", countC, "T ->", countT, "G ->", countG)
+    for base in bases:
+        print(f"    Base {base}: {seq_count_base(seq, base)}")

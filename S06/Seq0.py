@@ -25,9 +25,10 @@ def seq_reverse(seq, n):
     sequence = seq[:n]
     reverse = sequence[::-1]
     return reverse
-def seq_complement(seq):
+def seq_complement(seq, n):
     complement = ""
-    for i in seq:
+    sequence = seq[:n]
+    for i in sequence:
         if i == "A":
             complement += "T"
         elif i == "T":
@@ -37,3 +38,13 @@ def seq_complement(seq):
         elif i == "G":
             complement += "C"
     return complement
+
+def most_frequent_base(seq):
+    bases = {'A': 0, 'C': 0, 'G': 0, 'T': 0}
+    for base in seq:
+        if base in bases:
+            bases[base] += 1
+
+    most_frequent_base = max(bases, key=bases.get)
+
+    return most_frequent_base
