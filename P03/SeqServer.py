@@ -1,4 +1,7 @@
 import socket
+import termcolor
+from Seq0 import *
+
 class SeqServer():
     def __init__(self):
         IP = "127.0.0.1"
@@ -50,11 +53,24 @@ class SeqServer():
 
     def return_response(self, msg):     #esto es para que para cada msg del cliente el servidor de una respuesta concreta
         if msg.startswith("PING"):
-            print("PING")               #los prints aperecen en mi pantallita normal
+            termcolor.cprint("PING", "green")               #los prints aperecen en mi pantallita normal
             return self.ping_response()     #los returns aparecen en la terminal
         elif msg.startswith("GET"):
-            print("GET\n", self.get_response(msg))
+            termcolor.cprint("GET\n", self.get_response(msg), "green")
             return self.get_response()
+        elif msg.startswith("INFO"):
+            termcolor.cprint("INFO", "green")
+            return self.info_response()
+        elif msg.startswith("COMP"):
+            termcolor.cprint("COMP", "green")
+            return self.comp_response()
+        elif msg.startswith("REV"):
+            termcolor.cprint("REV", "green")
+            return self.rev_response()
+        elif msg.startswith("GENE"):
+            termcolor.cprint("GENE", "green")
+            return self.gene_response()
+
 
     def ping_response(self):        ###aqui no pongo msg ##porque ping ##responde ##SIEMPRE Ok!
         print("PING command!")  # Print message in green
@@ -70,6 +86,35 @@ class SeqServer():
                 pass
         return sequence[int(number)]        ##returneo el elemento de la lista con el indice i = number
 
+    def info_response(self, msg):
+        gene = msg.split(" ")
+        gene = gene[1]
+        seq = Seq(gene)
+        length = f"Total length: {seq.len()}"
+        c_a = f"\nA:{seq.seq_count_base('A')} ({seq.seq_count_base('A') / seq.len() * 100}%)"
+        c_c = f"\nC:{seq.seq_count_base('C')} ({seq.seq_count_base('C') / seq.len() * 100}%)"
+        c_g = f"\nG:{seq.seq_count_base('G')} ({seq.seq_count_base('G') / seq.len() * 100}%)"
+        c_t = f"\nT:{seq.seq_count_base('T')} ({seq.seq_count_base('T') / seq.len() * 100}%)"
+        return f"Sequence: {seq} \n{length} {c_a}, {c_c}, {c_g}, {c_t}"
 
+    def comp_response(self, msg):
+        seq = msg.split(" ")
+        seq = seq[1]
+        seq = Seq(seq)
+        comp = seq.seq_complement()
+        return comp
+
+    def rev_response(self, msg):
+        seq = msg.split(" ")
+        seq = seq[1]
+        seq = Seq(seq)
+        rev = seq.seq_reverse()
+        return rev
+
+    def gene_response(self, msg):
+        which_gene_to_send = msg.split(" ")
+        gene_to_send = which_gene_to_send[1]
+        seq = Seq()
+        return seq.read_fasta(gene_to_send)
 
 c = SeqServer()
