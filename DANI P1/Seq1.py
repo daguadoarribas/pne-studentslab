@@ -88,5 +88,12 @@ class Seq:
                     complement += "A"
         return complement
 
+    def most_frequent_base(self):
+        sequence = self.strbases
+        base_counts = {base: sequence.count(base) for base in sequence}
+        most_frequent_base = max(base_counts, key=base_counts.get)
+        return most_frequent_base
+
+
 
 

@@ -101,6 +101,6 @@ class Seq:
 
     def most_frequent_base(self):
         sequence = self.strbases
-        base_counts = {base: sequence.count(base) for base in sequence}
+        base_counts = {base: sequence.count(base) for base in sequence} ##diccionario  base_counts donde las claves son bases y los valores son el recuento de cada base en la secuencia.
         most_frequent_base = max(base_counts, key=base_counts.get)
         return most_frequent_base
