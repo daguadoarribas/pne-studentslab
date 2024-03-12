@@ -9,6 +9,7 @@
       <sourceFolder url="file://$MODULE_DIR$/DANI P0" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/DANI P1" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/DANI P2" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/guessnumber" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
