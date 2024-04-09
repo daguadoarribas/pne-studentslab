@@ -24,7 +24,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
         # Open the form1.html file
         # Read the index from the file
-        contents = Path('html/form-1.html').read_text()
+        contents = Path('html/form-2.html').read_text()
 
         # Generating the response message
         self.send_response(200)  # -- Status line: OK!
