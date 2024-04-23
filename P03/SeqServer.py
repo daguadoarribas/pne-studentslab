@@ -10,7 +10,7 @@ class SeqServer():
         MAX_OPEN_REQUESTS = 5
 
         # Counting the number of connections
-        number_con = 0
+        number_con = 0          #al principio no hay nada conectado
 
         # create an INET, STREAMing socket
         serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

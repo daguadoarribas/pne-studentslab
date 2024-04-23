@@ -1,17 +1,10 @@
-##Clase: tipo (animal, algo general)
-##Objeto: un ejemplo especifico de una clase [variable + clase(...)]
-#Clase: maquina > objeto:ordenador
-#Característica: las funciones que yo tengo que llamar
-#Las funciones de siempre son las caracteristicas y hay que llamarlas, las otras se asignan automaticamente al objeto
 from pathlib import Path
 
 class Seq:
-    """A class for representing sequences"""
-    def __init__(self, strbases=None):
-        # Initialize the sequence with the value
-        # passed as argument when creating the object
+
+    def __init__(self, strbases=None):      ##strabases=None -> es un argumento opcional
         if strbases == None:
-            print("NULL sequence created")
+            print("NULL sequence created")      ##Esto es lo que se printea
             self.strbases = "NULL"
         else:
             for i in strbases:
@@ -21,11 +14,20 @@ class Seq:
                     valid = False
                     break
             if valid == True:
-                print("New sequence created!")
+                print("New sequence created")
                 self.strbases = strbases
             else:
-                print("INVALID sequence!")
+                print("Invalid sequence")
                 self.strbases = "ERROR"
+
+    def __str__(self):
+        return self.strbases
+
+    def read_fasta(self, filename):
+        first_line = Path(filename).read_text().find("\n")
+        sequence = Path(filename).read_text()[first_line:]
+        self.strbases = sequence.replace("\n", "")
+        return self.strbases
 
     def len(self):
         if self.strbases == "ERROR" or self.strbases == "NULL":
@@ -34,73 +36,64 @@ class Seq:
             length = len(self.strbases)
         return length
 
-    def __str__(self):
-        return self.strbases
-
     def seq_count_base(self, base):
         if self.strbases == "ERROR" or self.strbases == "NULL":
             seq = ""
         else:
             seq = self.strbases
-
-        sol = 0
-
+        count = 0
         for i in seq:
             if i == base:
-                sol += 1
-
-        return sol
+                count += 1
+        return count
 
     def seq_count(self):
-        dic = {"A": 0, "C": 0, "T": 0, "G": 0}
+        dict = {"A":0, "C":0, "G":0, "T":0}
         if self.strbases == "ERROR" or self.strbases == "NULL":
             seq = ""
         else:
             seq = self.strbases
 
         for i in seq:
-            if i in dic:
-                dic[i] += 1
-        return dic
+            if i in dict:
+                dict[i] += 1
+        return dict
 
-    def seq_reverse(self):
+    def reverse(self):
         if self.strbases == "ERROR":
             reverse = "ERROR"
         elif self.strbases == "NULL":
             reverse = "NULL"
         else:
-            sequence = self.strbases
-            reverse = sequence[::-1]
+            reverse = self.strbases[::-1]
         return reverse
 
-    def seq_complement(self):
+
+    def complement(self):
         if self.strbases == "ERROR":
             complement = "ERROR"
         elif self.strbases == "NULL":
             complement = "NULL"
         else:
-            seq = self.strbases
+            sequence = self.strbases
             complement = ""
-            for i in seq:
+            for i in sequence:
                 if i == "A":
                     complement += "T"
-                elif i == "T":
-                    complement += "A"
                 elif i == "C":
                     complement += "G"
                 elif i == "G":
                     complement += "C"
+                elif i == "T":
+                    complement += "A"
         return complement
-
-    def read_fasta(self, filename):
-        file_contents = Path(filename).read_text()
-        first_line = file_contents.find("\n")
-        new_sequence = file_contents[first_line:]
-        self.strbases = new_sequence.replace("\n", "")
-        return self.strbases
 
     def most_frequent_base(self):
         sequence = self.strbases
-        base_counts = {base: sequence.count(base) for base in sequence} ##diccionario  base_counts donde las claves son bases y los valores son el recuento de cada base en la secuencia.
+        base_counts = {base: sequence.count(base) for base in sequence}
         most_frequent_base = max(base_counts, key=base_counts.get)
         return most_frequent_base
+
+
+
+

@@ -6,12 +6,12 @@
       <sourceFolder url="file://$MODULE_DIR$/P01" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/P02" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/P03" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/PRATICAR" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/P04" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/P05" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <sourceFolder url="file://$MODULE_DIR$/DANI P0" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/DANI P1" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/DANI P2" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/guessnumber" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.11 (pne-studentslab)" jdkType="Python SDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
