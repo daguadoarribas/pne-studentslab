@@ -56,7 +56,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         return
 
 
+<<<<<<< HEAD
 # ------------------------
+=======
+>>>>>>> origin/main
 # - Server MAIN program
 # ------------------------
 # -- Set the new handler

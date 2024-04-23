@@ -67,6 +67,10 @@ def process_client(s):
 # -- Listening socket
 ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+<<<<<<< HEAD
+=======
+# -- Optional: This is for avoiding the problem of Port already in use
+>>>>>>> origin/main
 ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 # -- Setup up the socket's IP and PORT
