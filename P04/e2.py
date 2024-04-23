@@ -54,9 +54,7 @@ def process_client(s):
     cs.send(response_msg.encode())
 
 
-# -------------- MAIN PROGRAM
-# ------ Configure the server
-# -- Listening socket
+
 ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # -- Optional: This is for avoiding the problem of Port already in use
