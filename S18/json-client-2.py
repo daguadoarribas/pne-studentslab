@@ -37,10 +37,10 @@ print("CONTENT: ")
 # Print the information in the object
 print()
 termcolor.cprint("Name: ", 'green', end="")
-print(person['Firstname'], person['Lastname'])
+print(person[0], person[1])
 
 termcolor.cprint("Age: ", 'green', end="")
-print(person['age'])
+print(person[2])
 
 # Get the phoneNumber list
 phoneNumbers = person['phoneNumber']

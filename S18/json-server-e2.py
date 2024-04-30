@@ -13,8 +13,6 @@ socketserver.TCPServer.allow_reuse_address = True
 class TestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
-        """This method is called whenever the client invokes the GET method
-        in the HTTP protocol request"""
 
         # Print the request line
         termcolor.cprint(self.requestline, 'green')
