@@ -123,3 +123,12 @@ class Seq:
                 biggest_value = d[keys]
                 answer = keys
         return answer
+
+    class Gene(Seq):
+        def __init__(self, strbases, name=""):
+            super().__init__(strbases)
+            self.name = name
+            print("New gene created")
+
+        def __str__(self):
+            return self.name + "-" + self.strbases
