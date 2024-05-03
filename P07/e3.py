@@ -2,36 +2,36 @@ import http.client
 import json
 import termcolor
 
-SERVER = 'rest.ensembl.org'
-ENDPOINT = '/sequence/id/ENSG00000207552'
-PARAMS = '?content-type=application/json'
-URL = SERVER + ENDPOINT + PARAMS
+server = "rest.ensembl.org"
+source = "/sequence/id/ENSG00000207552"
+parameters = "?content-type=application/json"
+url = server + source + parameters
 
 print()
-print(f"Server: {SERVER}")
-print(f"URL : {URL}")
+print(f"Server: {server}")
+print(f"URL : {url}")
 
-conn = http.client.HTTPConnection(SERVER)
+connection = http.client.HTTPConnection(server)
 
 try:
-    conn.request("GET", ENDPOINT + PARAMS)
+    connection.request("GET", source + parameters)
 except ConnectionRefusedError:
     print("ERROR! Cannot connect to the Server")
     exit()
 
-r1 = conn.getresponse()
+response = connection.getresponse()
 
-print(f"Response received!: {r1.status} {r1.reason}\n")
+print(f"Response received!: {response.status} {response.reason}\n")
 
-data1 = r1.read().decode("utf-8")
-gene = json.loads(data1)
+str_data = response.read().decode("utf-8")
+gene = json.loads(str_data)
 
 print()
-termcolor.cprint("Gene: ", 'green', end="")
+termcolor.cprint("Gene: ", "green", end="")
 print("MIR633")
 
-termcolor.cprint("Description: ", 'green', end="")
-print(gene['desc'])
+termcolor.cprint("Description: ", "green", end="")
+print(gene["desc"])
 
-termcolor.cprint("Bases: ", 'green', end="")
-print(gene['seq'])
+termcolor.cprint("Bases: ", "green", end="")
+print(gene["seq"])

@@ -3,57 +3,55 @@ import json
 import termcolor
 from Seq1 import Seq
 
-genes = {"FRAT1": "ENSG00000165879", "ADA": "ENSG00000196839", "FXN": "ENSG00000165060",
-         "RNU6_269P": "ENSG00000212379", "MIR633": "ENSG00000207552", "TTTY4C": "ENSG00000228296",
-         "RBMY2YP": "ENSG00000227633", "FGFR3": "ENSG00000068078",
-         "KDR": "ENSG00000128052", "ANK2": "ENSG00000145362"}
+genes = {"FRAT1": "ENSG00000165879", "ADA": "ENSG00000196839", "FXN": "ENSG00000165060", "RNU6_269P": "ENSG00000212379",
+         "MIR633": "ENSG00000207552", "TTTY4C": "ENSG00000228296", "RBMY2YP": "ENSG00000227633",
+         "FGFR3": "ENSG00000068078", "KDR": "ENSG00000128052", "ANK2": "ENSG00000145362"}
 
-for g in genes:
-    NAME = g
-    SERVER = 'rest.ensembl.org'
-    ENDPOINT = f'/sequence/id/{genes[NAME]}'
-    PARAMS = '?content-type=application/json'
-    URL = SERVER + ENDPOINT + PARAMS
+for i in genes:
+    name = i
+    server = "rest.ensembl.org"
+    source = f"/sequence/id/{genes[name]}"
+    parameters = "?content-type=application/json"
+    url = server + source + parameters
 
     print()
-    print(f"Server: {SERVER}")
-    print(f"URL : {URL}")
+    print(f"Server: {server}")
+    print(f"URL : {url}")
 
-    conn = http.client.HTTPConnection(SERVER)
+    connection = http.client.HTTPConnection(server)
 
     try:
-        conn.request("GET", ENDPOINT + PARAMS)
+        connection.request("GET", source + parameters)
     except ConnectionRefusedError:
         print("ERROR! Cannot connect to the Server")
         exit()
 
+    response = connection.getresponse()
 
-    r1 = conn.getresponse()
+    print(f"Response received!: {response.status} {response.reason}\n")
+    str_data = response.read().decode("utf-8")
 
-    print(f"Response received!: {r1.status} {r1.reason}\n")
-    data1 = r1.read().decode("utf-8")
-
-    gene = json.loads(data1)
+    gene = json.loads(str_data)
 
     print()
-    termcolor.cprint("Gene: ", 'green', end="")
-    print(NAME)
+    termcolor.cprint("Gene: ", "green", end="")
+    print(name)
 
-    termcolor.cprint("Description: ", 'green', end="")
-    print(gene['desc'])
+    termcolor.cprint("Description: ", "green", end="")
+    print(gene["desc"])
 
-    s = Seq(gene['seq'])
+    s = Seq(gene["seq"])
     termcolor.cprint("Total length: ", 'green', end="")
     print(s.len())
 
-    termcolor.cprint("A", 'blue', end="")
+    termcolor.cprint("A", "blue", end="")
     print(f": {s.seq_count_base('A')} ({round((s.seq_count_base('A') / s.len() * 100),1)}%)")
-    termcolor.cprint("C", 'blue', end="")
+    termcolor.cprint("C", "blue", end="")
     print(f": {s.seq_count_base('C')} ({round((s.seq_count_base('C') / s.len() * 100),1)}%)")
-    termcolor.cprint("G", 'blue', end="")
+    termcolor.cprint("G", "blue", end="")
     print(f": {s.seq_count_base('G')} ({round((s.seq_count_base('G') / s.len() * 100),1)}%)")
-    termcolor.cprint("T", 'blue', end="")
+    termcolor.cprint("T", "blue", end="")
     print(f": {s.seq_count_base('T')} ({round((s.seq_count_base('T') / s.len() * 100),1)}%)")
 
-    termcolor.cprint("Most frequent Base", 'green', end="")
-    print(f": {s.processing_the_genes(NAME)}")
+    termcolor.cprint("Most frequent Base", "green", end="")
+    print(f": {s.processing_the_genes(name)}")
