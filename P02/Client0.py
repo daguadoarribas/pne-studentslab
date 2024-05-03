@@ -1,10 +1,12 @@
 import socket
+
+
 class Client:
     def __init__(self, IP, PORT):
         self.IP = IP
         self.PORT = PORT
 
-    def __str__(self):      ##does not print, we print it from outside
+    def __str__(self):      # does not print, we print it from outside
         return "Connection to SERVER at " + self.IP + ", PORT: " + str(self.PORT)
 
 
