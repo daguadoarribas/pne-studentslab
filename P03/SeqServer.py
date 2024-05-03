@@ -2,7 +2,8 @@ import socket
 import termcolor
 from Seq0 import *
 
-class SeqServer():
+
+class SeqServer:
     def __init__(self):
         IP = "127.0.0.1"
         PORT = 8080
@@ -10,7 +11,7 @@ class SeqServer():
         MAX_OPEN_REQUESTS = 5
 
         # Counting the number of connections
-        number_con = 0          #al principio no hay nada conectado
+        number_con = 0  # al principio no hay nada conectado
 
         # create an INET, STREAMing socket
         serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -32,12 +33,12 @@ class SeqServer():
                 print("CONNECTION: {}. From the IP: {}".format(number_con, address))
 
                 # Read the message from the client, if any
-                msg = clientsocket.recv(2048).decode("utf-8")   #msg es el mensaje que el cliente manda al servidor-- lo que va despues de echo
+                msg = clientsocket.recv(2048).decode("utf-8")  # msg es el mensaje que el cliente manda al servidor-- lo que va despues de echo
                 print("Message from client: {}".format(msg))
 
                 # Send the message
 
-                message = self.return_response(str(msg))      #respuesta del servidor al msg del cliente
+                message = self.return_response(str(msg))  # respuesta del servidor al msg del cliente
                 send_bytes = str.encode(message)
                 # We must write bytes, not a string
                 clientsocket.send(send_bytes)
@@ -50,11 +51,10 @@ class SeqServer():
             print("Server stopped by the user")
             serversocket.close()
 
-
-    def return_response(self, msg):     #esto es para que para cada msg del cliente el servidor de una respuesta concreta
+    def return_response(self, msg):  # esto es para que para cada msg del cliente el servidor de una respuesta concreta
         if msg.startswith("PING"):
-            termcolor.cprint("PING", "green")               #los prints aperecen en mi pantallita normal
-            return self.ping_response()     #los returns aparecen en la terminal
+            termcolor.cprint("PING", "green")  # los prints aperecen en mi pantallita normal
+            return self.ping_response()  # los returns aparecen en la terminal
         elif msg.startswith("GET"):
             termcolor.cprint("GET\n", self.get_response(msg), "green")
             return self.get_response()
@@ -71,20 +71,19 @@ class SeqServer():
             termcolor.cprint("GENE", "green")
             return self.gene_response()
 
-
-    def ping_response(self):        ###aqui no pongo msg ##porque ping ##responde ##SIEMPRE Ok!
+    def ping_response(self):  # aqui no pongo msg porque ping responde SIEMPRE Ok!
         print("PING command!")  # Print message in green
         return "OK!\n"  # Response message
 
     def get_response(self, msg):
         sequence = ["ACGGTACGATAC", "CATGGGATCAATG", "ACATTAGCGTTGA", "TGGATCCATGCA", "AGTGATTGCTGAT"]
         number = 0
-        for i in msg:           #esto itera por las letras hasta que encuentra un numero eg GET 2 --> 2
+        for i in msg:  # esto itera por las letras hasta que encuentra un numero eg GET 2 --> 2
             if i.isdigit():
-                number = i          #esto hace que ese numero (2) ahora sea i
+                number = i  # esto hace que ese numero (2) ahora sea i
             else:
                 pass
-        return sequence[int(number)]        ##returneo el elemento de la lista con el indice i = number
+        return sequence[int(number)]  # returneo el elemento de la lista con el indice i = number
 
     def info_response(self, msg):
         gene = msg.split(" ")
@@ -113,8 +112,12 @@ class SeqServer():
 
     def gene_response(self, msg):
         which_gene_to_send = msg.split(" ")
-        gene_to_send = which_gene_to_send[1]
-        seq = Seq()
-        return seq.read_fasta(gene_to_send)
+        try:
+            gene_to_send = which_gene_to_send[1]
+            seq = Seq()
+            return seq.read_fasta(gene_to_send)
+        except IndexError:
+            return "Insert a valid sequence"
+
 
 c = SeqServer()
