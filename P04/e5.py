@@ -31,7 +31,7 @@ def process_client(s):
     elif "/info/T" in req_line:
         body = read_html_file("T.html")
     else:
-        body = Path("html/error.html").read_text()  # si no coincide ninguno, devuelvo el archivo error
+        body = Path("html/error.html").read_text()  # si no coincide ninguno, devuelvo el archivo html error
 
     status_line = "HTTP/1.1 200 OK\n"
     header = "Content-Type: text/html\n"
