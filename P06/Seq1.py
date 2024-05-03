@@ -2,6 +2,7 @@ from pathlib import Path
 
 
 class Seq:
+    bases = ["A", "C", "G", "T"]
     """A class for representing sequences"""
     def __init__(self, strbases=None):
         # Initialize the sequence with the value
@@ -97,25 +98,25 @@ class Seq:
 
     def most_frequent_base(self):
         sequence = self.strbases
-        base_counts = {base: sequence.count(base) for base in sequence} ##diccionario  base_counts donde las claves son bases y los valores son el recuento de cada base en la secuencia.
+        base_counts = {base: sequence.count(base) for base in sequence}  # diccionario  base_counts donde las claves son bases y los valores son el recuento de cada base en la secuencia.
         most_frequent_base = max(base_counts, key=base_counts.get)
         return most_frequent_base
 
     def processing_the_genes(self, gene):
-        d = {'A': 0, 'T': 0, 'C': 0, 'G': 0}
-        for g in gene:
-            if g == "A":
-                d['A'] += 1
-            elif g == "T":
-                d['T'] += 1
-            elif g == "C":
-                d['C'] += 1
-            elif g == "G":
-                d['G'] += 1
+        dict = {'A': 0, 'T': 0, 'C': 0, 'G': 0}
+        for i in gene:
+            if i == "A":
+                dict['A'] += 1
+            elif i == "T":
+                dict['T'] += 1
+            elif i == "C":
+                dict['C'] += 1
+            elif i == "G":
+                dict['G'] += 1
         biggest_value = 0
         answer = ""
-        for keys in d:
-            if biggest_value < d[keys]:
-                biggest_value = d[keys]
+        for keys in dict:
+            if biggest_value < dict[keys]:
+                biggest_value = dict[keys]
                 answer = keys
         return answer
