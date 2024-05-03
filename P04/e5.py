@@ -1,14 +1,14 @@
+from pathlib import Path
 import socket
 import termcolor
-from pathlib import Path
 
 IP = "127.0.0.1"
 PORT = 8080
 
 
 def read_html_file(filename):
-    folder = "html/info/"
-    file_contents = Path(folder + filename).read_text()
+    directory = "html/info/"
+    file_contents = Path(directory + filename).read_text()
     return file_contents
 
 
@@ -31,7 +31,7 @@ def process_client(s):
     elif "/info/T" in req_line:
         body = read_html_file("T.html")
     else:
-        body = Path("html/error.html").read_text()
+        body = Path("html/error.html").read_text()  # si no coincide ninguno, devuelvo el archivo error
 
     status_line = "HTTP/1.1 200 OK\n"
     header = "Content-Type: text/html\n"

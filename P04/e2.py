@@ -1,15 +1,14 @@
+from pathlib import Path
 import socket
 import termcolor
-from pathlib import Path
 
-# -- Server network parameters
 IP = "127.0.0.1"
 PORT = 8080
 
 
 def read_html_file(filename):
-    folder = "html/info/"
-    file_contents = Path(folder + filename).read_text()
+    directory = "html/info/"
+    file_contents = Path(directory + filename).read_text()
     return file_contents
 
 
@@ -23,8 +22,8 @@ def process_client(s):
     print("Request line: ", end="")
     termcolor.cprint(req_line, "green")
 
-    if "/info/A" in req_line:
-        body = read_html_file("A.html")
+    if "/info/A" in req_line:  # verifico si A esta en req_line
+        body = read_html_file("A.html")  # si se cumple, leo el contenido
 
     status_line = "HTTP/1.1 200 OK\n"
     header = "Content-Type: text/html\n"
@@ -34,7 +33,7 @@ def process_client(s):
 
 
 ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # lo hago para que socket pueda reutilizar una dirección local
 ls.bind((IP, PORT))
 ls.listen()
 print("Server configured!")

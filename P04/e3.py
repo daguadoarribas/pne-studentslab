@@ -1,14 +1,14 @@
+from pathlib import Path
 import socket
 import termcolor
-from pathlib import Path
 
 IP = "127.0.0.1"
 PORT = 8080
 
 
 def read_html_file(filename):
-    folder = "html/info/"
-    file_contents = Path(folder + filename).read_text()
+    directory = "html/info/"
+    file_contents = Path(directory + filename).read_text()
     return file_contents
 
 
