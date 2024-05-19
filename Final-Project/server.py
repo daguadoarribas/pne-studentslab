@@ -7,6 +7,7 @@ import json
 import jinja2
 from urllib.parse import urlparse, parse_qs
 import termcolor
+from class_seq import Seq
 
 
 PORT = 8081
@@ -101,38 +102,177 @@ def karyotype(parameters):
         print(f"Error: {e}")
     return code, content_type, contents
 
-def chromosome_length(endpoint, parameters):
-    request = RESOURCE_TO_ENSEMBL_LINK[endpoint]
-    specie = parameters['species'][0]
-    user_chromosome = parameters['chromo'][0]
-    url = f"{request['resource']}/{specie}?{request['params']}"
+def chromosome_length(parameters):
+    endpoint = '/chromosomeLength'
+    code = HTTPStatus.NOT_FOUND
+    content_type = "text/html"
+    contents = handle_error(endpoint, ENDPOINT_ERROR)
+    try:
+        request = RESOURCE_TO_ENSEMBL_LINK[endpoint]
+        species = parameters['species'][0]
+        chromo = parameters['chromo'][0]
+        url = f"{request['resource']}/{species}?{request['params']}"
+        error, data = server_request(ENSEMBL_SERVER, url)
+        if not error:
+            print(data)
+            chromosomes = data['top_level_region']
+            length = None
+            flag = False
+            i = 0
+            while not flag and i < len(chromosomes):
+                chromosome = chromosomes[i]
+                if chromosome['name'] == chromo:
+                    length = chromosome['length']
+                    flag = True
+                i += 1
+            context = {'chromosome': chromo, 'length': length}
+            if 'json' in parameters and parameters['json'][0] == '1':
+                content_type = "application/json"
+                contents = json.dumps(context)
+            else:
+                content_type = "text/html"
+                contents = read_html("chromosomeLength.html").render(context=context)
+            code = HTTPStatus.OK
+    except Exception as e:
+        print(f"Error: {e}")
+    return code, content_type, contents
+
+def get_id(gene):
+    resource = "/homology/symbol/human/" + gene
+    params = 'content-type=application/json;format=condensed'
+    url = f"{resource}?{params}"
     error, data = server_request(ENSEMBL_SERVER, url)
+    gene_id = None
     if not error:
-        length = None
-        print(data)
-        chromosomes_list = data['top_level_region']
-        for chromo in chromosomes_list:
-            if chromo['name'] == user_chromosome:
-                length = chromo['length']
-                break
-        context = {"length": length, 'chromosomes_list': chromosomes_list}
-        contents = read_html_template("chromosomeLength.html").render(context=context)
-        code = HTTPStatus.OK
-    else:
-        contents = handle_error(endpoint, ENSEMBL_CONNECTION_ERROR)
-        code = HTTPStatus.SERVICE_UNAVAILABLE
-    return code, contents
+        gene_id = data['data'][0]['id']
+    return gene_id
+
+def geneSeq(parameters):
+    endpoint = '/geneSeq'
+    code = HTTPStatus.NOT_FOUND
+    content_type = "text/html"
+    contents = handle_error(endpoint, ENDPOINT_ERROR)
+    try:
+        gene = parameters['gene'][0]
+        gene_id = get_id(gene)
+        print(f"Gene: {gene} - Gene ID: {gene_id}")
+        if gene_id is not None:
+            request = RESOURCE_TO_ENSEMBL_LINK[endpoint]
+            url = f"{request['resource']}/{gene_id}?{request['params']}"
+            error, data = server_request(ENSEMBL_SERVER, url)
+            if not error:
+                bases = data['seq']
+                context = {'gene': gene, 'bases': bases}
+                if 'json' in parameters and parameters['json'][0] == '1':
+                    content_type = "application/json"
+                    contents = json.dumps(context)
+                else:
+                    content_type = "text/html"
+                    contents = read_html("geneSeq.html").render(context=context)
+                code = HTTPStatus.OK
+    except Exception as e:
+        print(f"Error: {e}")
+    return code, content_type, contents
+
+def geneInfo(parameters):
+    endpoint = '/geneInfo'
+    code = HTTPStatus.NOT_FOUND
+    content_type = "text/html"
+    contents = handle_error(endpoint, ENDPOINT_ERROR)
+    try:
+        gene = parameters['gene'][0]
+        gene_id = get_id(gene)
+        print(f"Gene: {gene} - Gene ID: {gene_id}")
+        if gene_id is not None:
+            request = RESOURCE_TO_ENSEMBL_LINK[endpoint]
+            url = f"{request['resource']}/{gene_id}?{request['params']}"
+            error, data = server_request(ENSEMBL_SERVER, url)
+            if not error:
+                data = data[0]
+                start = data['start']
+                end = data['end']
+                length = end - start
+                id = gene_id
+                chromosome_name = data['assembly_name']
+                context = {'gene': gene, 'start': start, 'end': end, 'length': length, 'id': id,
+                           'chromosome_name': chromosome_name}
+                if 'json' in parameters and parameters['json'][0] == '1':
+                    content_type = "application/json"
+                    contents = json.dumps(context)
+                else:
+                    content_type = "text/html"
+                    contents = read_html("geneInfo.html").render(context=context)
+                code = HTTPStatus.OK
+    except Exception as e:
+        print(f"Error: {e}")
+    return code, content_type, contents
+
+def geneCalc(parameters):
+    endpoint = '/geneCalc'
+    code = HTTPStatus.NOT_FOUND
+    content_type = "text/html"
+    contents = handle_error(endpoint, ENDPOINT_ERROR)
+    try:
+        gene = parameters['gene'][0]
+        gene_id = get_id(gene)
+        print(f"Gene: {gene} - Gene ID: {gene_id}")
+        if gene_id is not None:
+            request = RESOURCE_TO_ENSEMBL_LINK[endpoint]
+            url = f"{request['resource']}/{gene_id}?{request['params']}"
+            error, data = server_request(ENSEMBL_SERVER, url)
+            if not error:
+                bases = data['seq']
+                s = Seq(bases)
+                context = {'gene': gene, 'length': s.len(), 'info': s.info()}
+                if 'json' in parameters and parameters['json'][0] == '1':
+                    content_type = "application/json"
+                    contents = json.dumps(context)
+                else:
+                    content_type = "text/html"
+                    contents = read_html("geneCalc.html").render(context=context)
+                code = HTTPStatus.OK
+    except Exception as e:
+        print(f"Error: {e}")
+    return code, content_type, contents
+
+
+def geneList(parameters):
+    endpoint = '/geneList'
+    code = HTTPStatus.NOT_FOUND
+    content_type = "text/html"
+    contents = handle_error(endpoint, ENDPOINT_ERROR)
+    try:
+        chromo = parameters['chromo'][0]
+        start = int(parameters['start'][0])
+        end = int(parameters['end'][0])
+        request = RESOURCE_TO_ENSEMBL_LINK[endpoint]
+        url = f"{request['resource']}/{chromo}:{start}-{end}?{request['params']}"
+        error, data = server_request(ENSEMBL_SERVER, url)
+        if not error:
+            names = []
+            for gene in data:
+                if 'external_name' in gene:
+                    names.append(gene['external_name'])
+            context = {'names': names}
+            if 'json' in parameters and parameters['json'][0] == '1':
+                content_type = "application/json"
+                contents = json.dumps(context)
+            else:
+                content_type = "text/html"
+                contents = read_html("geneList.html").render(context=context)
+            code = HTTPStatus.OK
+    except Exception as e:
+        print(f"Error: {e}")
+    return code, content_type, contents
 
 
 socketserver.TCPServer.allow_reuse_address = True
-
-
 class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
-    def do_get(self):
+    def do_GET(self):
         termcolor.cprint(self.requestline, 'green')
 
         parsed_url = urlparse(self.path)
-        endpoint = parsed_url.path
+        endpoint = parsed_url.path  # resource or path
         print(f"Endpoint: {endpoint}")
         parameters = parse_qs(parsed_url.query)
         print(f"Parameters: {parameters}")
@@ -143,11 +283,19 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             file_path = os.path.join(HTML_FOLDER, "index.html")
             contents = Path(file_path).read_text()
         elif endpoint == "/listSpecies":
-            code, contents = list_species(endpoint, parameters)
+            code, content_type, contents = list_species(parameters)
         elif endpoint == "/karyotype":
-            code, contents = karyotype(endpoint, parameters)
+            code, content_type, contents = karyotype(parameters)
         elif endpoint == "/chromosomeLength":
-            code, contents = chromosome_length(endpoint, parameters)
+            code, content_type, contents = chromosome_length(parameters)
+        elif endpoint == "/geneSeq":
+            code, content_type, contents = geneSeq(parameters)
+        elif endpoint == "/geneInfo":
+            code, content_type, contents = geneInfo(parameters)
+        elif endpoint == "/geneCalc":
+            code, content_type, contents = geneCalc(parameters)
+        elif endpoint == "/geneList":
+            code, content_type, contents = geneList(parameters)
         else:
             contents = handle_error(endpoint, RESOURCE_MISSING_ERROR)
             code = HTTPStatus.NOT_FOUND
