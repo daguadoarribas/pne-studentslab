@@ -102,6 +102,7 @@ def karyotype(parameters):
         print(f"Error: {e}")
     return code, content_type, contents
 
+
 def chromosome_length(parameters):
     endpoint = '/chromosomeLength'
     code = HTTPStatus.NOT_FOUND
@@ -137,6 +138,7 @@ def chromosome_length(parameters):
         print(f"Error: {e}")
     return code, content_type, contents
 
+
 def get_id(gene):
     resource = "/homology/symbol/human/" + gene
     params = 'content-type=application/json;format=condensed'
@@ -146,6 +148,7 @@ def get_id(gene):
     if not error:
         gene_id = data['data'][0]['id']
     return gene_id
+
 
 def geneSeq(parameters):
     endpoint = '/geneSeq'
@@ -173,6 +176,7 @@ def geneSeq(parameters):
     except Exception as e:
         print(f"Error: {e}")
     return code, content_type, contents
+
 
 def geneInfo(parameters):
     endpoint = '/geneInfo'
@@ -206,6 +210,7 @@ def geneInfo(parameters):
     except Exception as e:
         print(f"Error: {e}")
     return code, content_type, contents
+
 
 def geneCalc(parameters):
     endpoint = '/geneCalc'
@@ -267,16 +272,16 @@ def geneList(parameters):
 
 
 socketserver.TCPServer.allow_reuse_address = True
+
+
 class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         termcolor.cprint(self.requestline, 'green')
-
         parsed_url = urlparse(self.path)
-        endpoint = parsed_url.path  # resource or path
+        endpoint = parsed_url.path
         print(f"Endpoint: {endpoint}")
         parameters = parse_qs(parsed_url.query)
         print(f"Parameters: {parameters}")
-
         code = HTTPStatus.OK
         content_type = "text/html"
         if endpoint == "/":
@@ -299,13 +304,11 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         else:
             contents = handle_error(endpoint, RESOURCE_MISSING_ERROR)
             code = HTTPStatus.NOT_FOUND
-
         self.send_response(code)
         contents_bytes = contents.encode()
         self.send_header('Content-Type', content_type)
         self.send_header('Content-Length', str(len(contents_bytes)))
         self.end_headers()
-
         self.wfile.write(contents_bytes)
 
 
