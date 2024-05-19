@@ -7,9 +7,9 @@
 <body style="background-color: yellow;">
     <h1>List of genes in chromosome {{context.chromosome}}</h1>
     <p>Start: {{context.start}}, End: {{context.end}}</p>
-    {% for name in context.names %}
-        <ul><li>{{name}}</li></ul>
-    {% endfor %}
+        {% for name in context.names %}
+            <ul><li>{{name}}</li></ul>
+        {% endfor %}
     <a href="index.html">Main page</a>
 </body>
 </html>
