@@ -15,77 +15,91 @@ ENSEMBL_SERVER = "rest.ensembl.org"
 RESOURCE_TO_ENSEMBL_LINK = {"/listSpecies": {"resource": "/info/species", "params": "content-type=application/json"},
                             "/karyotype": {"resource": "/info/assembly", "params": "content-type=application/json"},
                             "/chromosomeLength": {"resource": "/info/assembly", "params": "content-type=application/json"}}
-ENSEMBL_CONNECTION_ERROR = "Error in communication with the Ensembl server"
+ENDPOINT_ERROR = "Ups! Something went wrong"
 RESOURCE_MISSING_ERROR = "Resource not available"
 
 
-def read_html_template(file_name):
+def read_html(file_name):
     file_path = os.path.join(HTML_FOLDER, file_name)
     contents = Path(file_path).read_text()
     contents = jinja2.Template(contents)
     return contents
 
 
-def server_request(server, url):
+def server_request(SERVER, URL):
     import http.client
-
-    error = False
-    data = None
+    flag = True
+    info = None
     try:
-        connection = http.client.HTTPSConnection(server)
-        connection.request("GET", url)
+        connection = http.client.HTTPConnection(SERVER)
+        connection.request("GET", URL)
         response = connection.getresponse()
         if response.status == HTTPStatus.OK:
             json_str = response.read().decode()
-            data = json.loads(json_str)
-        else:
-            error = True
+            info = json.loads(json_str)
     except Exception:
-        error = True
-    return error, data
+        flag = False
+    return flag, info
 
 
 def handle_error(endpoint, message):
-    context = {"endpoint": endpoint, "message": message}
-    return read_html_template("error.html").render(context=context)
+    dict_errors = {"endpoint": endpoint, "message": message}
+    return read_html("error.html").render(context=dict_errors)
 
 
-def list_species(endpoint, parameters):
-    request = RESOURCE_TO_ENSEMBL_LINK[endpoint]
-    url = f"{request['resource']}?{request['params']}"
-    error, data = server_request(ENSEMBL_SERVER, url)
-    if not error:
-        limit = None
-        if 'limit' in parameters:
-            limit = int(parameters['limit'][0])
+def list_species(parameters):
+    endpoint = '/listSpecies'
+    code = HTTPStatus.NOT_FOUND
+    content_type = "text/html"
+    contents = handle_error(endpoint, ENDPOINT_ERROR)
 
-        species = data["listSpecies"]
-        name_species = []
-        for specie in species[:limit]:
-            name_species.append(specie["display_name"])
-        context = {"number_of_species": len(species), "limit": limit, "name_species": name_species}
-        contents = read_html_template("listSpecies.html").render(context=context)
-        code = HTTPStatus.OK
-    else:
-        contents = handle_error(endpoint, ENSEMBL_CONNECTION_ERROR)
-        code = HTTPStatus.SERVICE_UNAVAILABLE
-    return code, contents
+    try:
+        request = RESOURCE_TO_ENSEMBL_LINK[endpoint]
+        url = f"{request['resource']}?{request['params']}"
+        error, data = server_request(ENSEMBL_SERVER, url)
+        if not error:
+            limit = None
+            if 'limit' in parameters:
+                limit = int(parameters['limit'][0])
+            species = data['species']
+            name_species = []
+            for specie in species[:limit]:
+                name_species.append(specie['display_name'])
+            context = {'number_of_species': len(species), 'limit': limit, 'name_species': name_species}
+            if 'json' in parameters and parameters['json'][0] == '1':
+                content_type = "application/json"
+                contents = json.dumps(context)
+            else:
+                content_type = "text/html"
+                contents = read_html("species.html").render(context=context)
+            code = HTTPStatus.OK
+    except Exception as e:
+        print(f"Error: {e}")
+    return code, content_type, contents
 
 
-def karyotype(endpoint, parameters):
-    request = RESOURCE_TO_ENSEMBL_LINK[endpoint]
-    specie = parameters['species'][0]
-    url = f"{request['resource']}/{specie}?{request['params']}"
-    error, data = server_request(ENSEMBL_SERVER, url)
-    if not error:
-        context = {"specie": specie, "karyotype": data['karyotype']}
-        contents = read_html_template("karyotype.html").render(context=context)
-        code = HTTPStatus.OK
-    else:
-        contents = handle_error(endpoint, ENSEMBL_CONNECTION_ERROR)
-        code = HTTPStatus.SERVICE_UNAVAILABLE
-    return code, contents
-
+def karyotype(parameters):
+    endpoint = '/karyotype'
+    code = HTTPStatus.NOT_FOUND
+    content_type = "text/html"
+    contents = handle_error(endpoint, ENDPOINT_ERROR)
+    try:
+        request = RESOURCE_TO_ENSEMBL_LINK[endpoint]
+        species = quote(parameters['species'][0])
+        url = f"{request['resource']}/{species}?{request['params']}"
+        error, data = server_request(ENSEMBL_SERVER, url)
+        if not error:
+            context = {'species': species, 'karyotype': data['karyotype']}
+            if 'json' in parameters and parameters['json'][0] == '1':
+                content_type = "application/json"
+                contents = json.dumps(context)
+            else:
+                content_type = "text/html"
+                contents = read_html("karyotype.html").render(context=context)
+            code = HTTPStatus.OK
+    except Exception as e:
+        print(f"Error: {e}")
+    return code, content_type, contents
 
 def chromosome_length(endpoint, parameters):
     request = RESOURCE_TO_ENSEMBL_LINK[endpoint]
